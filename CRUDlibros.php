@@ -6,6 +6,7 @@ include('src/header.php');
     <table class="table col-12 col-sm-12" id="libraryTable" width="100%">
         <thead class="table-dark">
             <tr>
+                <th>Id Autor</th>
                 <th>Nombre</th>
                 <th>Apellidos</th>
                 <th>Pais autor</th>
@@ -97,24 +98,24 @@ include('src/header.php');
         <form method="POST">
             <!-- Id de libro input -->
             <div class="form-outline mb-4">
-                <input type="text" id="form1Example1" name="tituloL" class="form-control" readonly="readonly"/>
+                <input type="text" id="IdLEd" name="tituloL" class="form-control" readonly="readonly"/>
                 <label class="form-label" for="form1Example1">Id de libro</label>
             </div>
             <!-- Titulo de libro input -->
             <div class="form-outline mb-4">
-                <input type="text" id="form1Example1" name="tituloL" class="form-control" />
+                <input type="text" id="tituloLEd" name="tituloL" class="form-control" />
                 <label class="form-label" for="form1Example1">Titulo de libro</label>
             </div>
 
             <!-- Clave editorial input -->
             <div class="form-outline mb-4">
-                <input type="text" id="form1Example2" name="cveEditorial" class="form-control" />
-                <label class="form-label" for="form1Example2">Clave de editorial</label>
+                <input type="text" id="editorialLEd" name="cveEditorial" class="form-control" />
+                <label class="form-label" for="form1Example2">Editorial</label>
             </div>
 
             <!-- Clave autor input -->
             <div class="form-outline mb-4">
-                <input type="text" id="form1Example2" name="cveAutor" class="form-control" />
+                <input type="text" id="autorLEd" name="cveAutor" class="form-control" />
                 <label class="form-label" for="form1Example2">Clave de autor</label>
             </div>
         </div>  
@@ -152,6 +153,11 @@ include('src/header.php');
         </div>
         <div class="modal-body">
             <p>¿Deseas eliminar este libro?</p>
+        <!-- Id de libro input -->
+        <div class="form-outline mb-4">
+                <input type="text" id="IdLibroEliminar" name="tituloL" class="form-control" readonly="readonly"/>
+                <label class="form-label" for="form1Example1">Id de libro</label>
+            </div>
         </div>  
         <div class="modal-footer">
             <button type="button" class="btn btn-outline-success" data-mdb-dismiss="modal">
@@ -188,14 +194,32 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
                 "url": "mostrarLibros.php"
             },
             "columns":[
+                {"data":"CLAVE_AUTOR"},
                 {"data":"NOMBRE"},
                 {"data":"APELLIDOS"},
                 {"data":"PAIS_AUTOR"},
                 {"data":"EDITORIAL"},
                 {"data":"CLAVE_LIBRO"},
                 {"data":"LIBRO"},
-                {"defaultContent":"<button type='submit' class='btn btn-outline-success me-2 btn-sm' data-mdb-toggle='modal' data-mdb-target='#EditarModal'>Editar</button><button type='submit' class='btn btn-outline-danger btn-sm'data-mdb-toggle='modal' data-mdb-target='#EliminarModal'>Eliminar</button>"}
+                {"defaultContent":"<button type='button' class='editar btn btn-outline-success me-2 btn-sm' data-mdb-toggle='modal' data-mdb-target='#EditarModal'>Editar</button><button type='button' class='eliminar btn btn-outline-danger btn-sm'data-mdb-toggle='modal' data-mdb-target='#EliminarModal'>Eliminar</button>"}
             ]
+        });
+        getLibros("#libraryTable tbody", table);
+        getIdEliminar("#libraryTable tbody", table);
+    }
+    var getLibros = function(tbody, table){
+        $(tbody).on("click", "button.editar", function(){
+            var dataLibros = table.row($(this).parents("tr")).data();
+            var idLibro = $("#IdLEd").val(dataLibros.CLAVE_LIBRO),
+                tituloLibro = $("#tituloLEd").val(dataLibros.LIBRO),
+                editorialLibro = $("#editorialLEd").val(dataLibros.EDITORIAL),
+                autorLibro = $("#autorLEd").val(dataLibros.CLAVE_AUTOR);
+        });
+    }
+    var getIdEliminar = function(tbody, table){
+        $(tbody).on("click", "button.eliminar", function(){
+            var dataLibros = table.row($(this).parents("tr")).data();
+            var idLibro = $("#IdLibroEliminar").val(dataLibros.CLAVE_LIBRO);
         });
     }
 </script>
