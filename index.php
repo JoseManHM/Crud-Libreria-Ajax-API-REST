@@ -8,7 +8,7 @@ include('src/header.php');
     <p class="card-text">
       Realiza las acciones de CRUD (Crear, Mostrar, Actualizar y Eliminar) usuarios haciendo uso de PHP, MySQL y AJAX.
     </p>
-    <a href="CRUD.php" class="btn btn-outline-dark me-3">Comenzar</a>
+    <a href="CRUDlibros.php" class="btn btn-outline-dark me-3">Libros</a>
     <br>
     <img
     src="src/cloud-database.png"
