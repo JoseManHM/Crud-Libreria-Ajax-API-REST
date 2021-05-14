@@ -9,7 +9,7 @@ include('src/header.php');
                 <th>Id Autor</th>
                 <th>Nombre</th>
                 <th>Apellidos</th>
-                <th>Pais autor</th>
+                <th>Id editorial</th>
                 <th>Editorial</th>
                 <th>Clave libro</th>
                 <th>Libro</th>
@@ -95,10 +95,10 @@ include('src/header.php');
             ></button>
         </div>
         <div class="modal-body">
-        <form method="POST">
+        <form method="POST" id="formularioEditar">
             <!-- Id de libro input -->
             <div class="form-outline mb-4">
-                <input type="text" id="IdLEd" name="tituloL" class="form-control" readonly="readonly"/>
+                <input type="text" id="IdLEd" name="IdLibro" class="form-control" readonly="readonly"/>
                 <label class="form-label" for="form1Example1">Id de libro</label>
             </div>
             <!-- Titulo de libro input -->
@@ -110,7 +110,7 @@ include('src/header.php');
             <!-- Clave editorial input -->
             <div class="form-outline mb-4">
                 <input type="text" id="editorialLEd" name="cveEditorial" class="form-control" />
-                <label class="form-label" for="form1Example2">Editorial</label>
+                <label class="form-label" for="form1Example2">Clave de editorial</label>
             </div>
 
             <!-- Clave autor input -->
@@ -123,7 +123,7 @@ include('src/header.php');
             <button type="button" class="btn btn-outline-danger" data-mdb-dismiss="modal">
             Cancelar
             </button>
-            <button type="submit" name="addlibro" class="btn btn-outline-success">Editar</button>
+            <button type="submit" name="addlibro" id="btn-Editar" class="btn btn-outline-success">Editar</button>
         </div>
         </form>
         </div>
@@ -163,7 +163,7 @@ include('src/header.php');
             <button type="button" class="btn btn-outline-success" data-mdb-dismiss="modal">
             Cancelar
             </button>
-            <button type="submit" name="addlibro" class="btn btn-outline-danger">Eliminar</button>
+            <button type="submit" id="btnEliminarLibro" name="addlibro" class="btn btn-outline-danger">Eliminar</button>
         </div>
         </div>
     </div>
@@ -181,6 +181,8 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
 <script>
   $(document).ready( function(){
       mostrarL();
+      actualizar();
+      eliminarLibro();
 } );
     var mostrarL = function(){
         var table = $("#libraryTable").DataTable({
@@ -189,6 +191,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
             "language": {
             "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
             },
+            "destroy":true,
             "ajax":{
                 "method":"POST",
                 "url": "mostrarLibros.php"
@@ -197,22 +200,22 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
                 {"data":"CLAVE_AUTOR"},
                 {"data":"NOMBRE"},
                 {"data":"APELLIDOS"},
-                {"data":"PAIS_AUTOR"},
+                {"data":"CLAVE_EDITORIAL"},
                 {"data":"EDITORIAL"},
                 {"data":"CLAVE_LIBRO"},
                 {"data":"LIBRO"},
-                {"defaultContent":"<button type='button' class='editar btn btn-outline-success me-2 btn-sm' data-mdb-toggle='modal' data-mdb-target='#EditarModal'>Editar</button><button type='button' class='eliminar btn btn-outline-danger btn-sm'data-mdb-toggle='modal' data-mdb-target='#EliminarModal'>Eliminar</button>"}
+                {"defaultContent":"<button type='submit' class='editar btn btn-outline-success me-2 btn-sm' data-mdb-toggle='modal' data-mdb-target='#EditarModal'>Editar</button><button type='button' class='eliminar btn btn-outline-danger btn-sm'data-mdb-toggle='modal' data-mdb-target='#EliminarModal'>Eliminar</button>"}
             ]
         });
         getLibros("#libraryTable tbody", table);
-        getIdEliminar("#libraryTable tbody", table);
+        getIdEliminar("#libraryTable tbody", table);  
     }
     var getLibros = function(tbody, table){
         $(tbody).on("click", "button.editar", function(){
             var dataLibros = table.row($(this).parents("tr")).data();
             var idLibro = $("#IdLEd").val(dataLibros.CLAVE_LIBRO),
                 tituloLibro = $("#tituloLEd").val(dataLibros.LIBRO),
-                editorialLibro = $("#editorialLEd").val(dataLibros.EDITORIAL),
+                editorialLibro = $("#editorialLEd").val(dataLibros.CLAVE_EDITORIAL),
                 autorLibro = $("#autorLEd").val(dataLibros.CLAVE_AUTOR);
         });
     }
@@ -221,6 +224,42 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
             var dataLibros = table.row($(this).parents("tr")).data();
             var idLibro = $("#IdLibroEliminar").val(dataLibros.CLAVE_LIBRO);
         });
+    }
+    var actualizar = function(){
+        $("#btn-Editar").on("click", function(e){
+            e.preventDefault();
+            var frm = $("#formularioEditar").serialize();
+            $.ajax({
+                method: "POST",
+                url: "actualizarLibro.php",
+                data: frm
+            }).done(function(){
+                console.log(frm);
+                //$("#formularioEditar").trigger("reset");
+                $("#EditarModal").modal('hide');
+                mostrarL();
+                //limpiar();
+                
+            });
+        });
+    }
+    var eliminarLibro = function(){
+        $("#btnEliminarLibro").on("click", function(){
+            var idLibro = $("#IdLibroEliminar").val();
+            $.ajax({
+                method: "POST",
+                url: "eliminarLibro.php",
+                data: {"IdLibro": idLibro}
+            }).done(function(info){
+                mostrarL();
+            });
+        });
+    }
+    var limpiar = function(){
+        $("#IdLibro").val("");
+        $("#tituloL").val("");
+        $("#cveEditorial").val("");
+        $("#cveAutor").val("");
     }
 </script>
 <?php
