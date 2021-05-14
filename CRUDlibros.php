@@ -43,7 +43,7 @@ include('src/header.php');
             ></button>
         </div>
         <div class="modal-body">
-        <form method="POST">
+        <form method="POST" id="formularioInsertar">
             <!-- Titulo de libro input -->
             <div class="form-outline mb-4">
                 <input type="text" id="form1Example1" name="tituloL" class="form-control" />
@@ -66,7 +66,7 @@ include('src/header.php');
             <button type="button" class="btn btn-outline-danger" data-mdb-dismiss="modal">
             Cancelar
             </button>
-            <button type="submit" name="addlibro" class="btn btn-outline-success">Agregar</button>
+            <button type="submit" id="insLibro" name="addlibro" class="btn btn-outline-success">Agregar</button>
         </div>
         </form>
         </div>
@@ -183,6 +183,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
       mostrarL();
       actualizar();
       eliminarLibro();
+      insertarLibro();
 } );
     var mostrarL = function(){
         var table = $("#libraryTable").DataTable({
@@ -193,7 +194,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
             },
             "destroy":true,
             "ajax":{
-                "method":"POST",
+                "type":"POST",
                 "url": "mostrarLibros.php"
             },
             "columns":[
@@ -204,7 +205,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
                 {"data":"EDITORIAL"},
                 {"data":"CLAVE_LIBRO"},
                 {"data":"LIBRO"},
-                {"defaultContent":"<button type='submit' class='editar btn btn-outline-success me-2 btn-sm' data-mdb-toggle='modal' data-mdb-target='#EditarModal'>Editar</button><button type='button' class='eliminar btn btn-outline-danger btn-sm'data-mdb-toggle='modal' data-mdb-target='#EliminarModal'>Eliminar</button>"}
+                {"defaultContent":"<button type='button' class='editar btn btn-outline-success me-2 btn-sm' data-mdb-toggle='modal' data-mdb-target='#EditarModal'>Editar</button><button type='button' class='eliminar btn btn-outline-danger btn-sm'data-mdb-toggle='modal' data-mdb-target='#EliminarModal'>Eliminar</button>"}
             ]
         });
         getLibros("#libraryTable tbody", table);
@@ -212,7 +213,7 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
     }
     var getLibros = function(tbody, table){
         $(tbody).on("click", "button.editar", function(){
-            var dataLibros = table.row($(this).parents("tr")).data();
+            let dataLibros = table.row($(this).parents("tr")).data();
             var idLibro = $("#IdLEd").val(dataLibros.CLAVE_LIBRO),
                 tituloLibro = $("#tituloLEd").val(dataLibros.LIBRO),
                 editorialLibro = $("#editorialLEd").val(dataLibros.CLAVE_EDITORIAL),
@@ -247,20 +248,33 @@ src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
         $("#btnEliminarLibro").on("click", function(){
             var idLibro = $("#IdLibroEliminar").val();
             $.ajax({
-                method: "POST",
+                type: "POST",
                 url: "eliminarLibro.php",
-                data: {"IdLibro": idLibro}
-            }).done(function(info){
-                mostrarL();
+                data: {"IdLibro": idLibro},
+                success:function(){
+                    mostrarL();
+                    $("#EliminarModal").modal('hide');
+                }
             });
         });
     }
-    var limpiar = function(){
-        $("#IdLibro").val("");
-        $("#tituloL").val("");
-        $("#cveEditorial").val("");
-        $("#cveAutor").val("");
+    var insertarLibro = function(){
+        $("#insLibro").click(function(e){
+            e.preventDefault();
+            var frm = $("#formularioInsertar").serialize();
+            $.ajax({
+                type: "POST",
+                url: "agregarLibro.php",
+                data: frm,
+                success:function(r){
+                    $("#formularioInsertar").trigger("reset");
+                    $("#InsertarModal").modal('hide');
+                    mostrarL();
+                }
+            });
+        });
     }
+    
 </script>
 <?php
 include('src/footer.php');
