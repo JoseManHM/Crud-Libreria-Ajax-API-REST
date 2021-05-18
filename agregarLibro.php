@@ -4,7 +4,7 @@
             $editorial = $_POST["cveEditorial"];
             $autor = $_POST["cveAutor"];
             
-            $sql = "INSERT INTO LIBRO (TITULO_LIBRO, CVE_EDITORIAL, CVE_AUTOR) VALUES ('$titulo', $editorial, $autor)";
+            $sql = "INSERT INTO libro (TITULO_LIBRO, CVE_EDITORIAL, CVE_AUTOR) VALUES ('$titulo', $editorial, $autor)";
             $resultado = mysqli_query($conn, $sql);
             if(!$resultado){
                 die('Insercion fallida');
