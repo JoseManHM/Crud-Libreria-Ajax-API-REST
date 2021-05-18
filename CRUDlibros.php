@@ -76,7 +76,60 @@ include('src/header.php');
 
     <!--Modal editar-->
 
-    
+    <div
+            class="modal fade"
+            id="EditarModal"
+            tabindex="-1"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+        <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar libro</h5>
+            <button
+            type="button"
+            class="btn-close"
+            data-mdb-dismiss="modal"
+            aria-label="Close"
+            ></button>
+        </div>
+        <div class="modal-body">
+        <form method="POST" id="formularioEditar" name="formEditar">
+            <!-- Id de libro input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="IdLEd" name="IdLibro" class="form-control" readonly="readonly"/>
+                <label class="form-label" for="form1Example1">Id de libro</label>
+            </div>
+            <!-- Titulo de libro input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="tituloLEd" name="tituloL" class="form-control" />
+                <label class="form-label" for="form1Example1">Titulo de libro</label>
+            </div>
+
+            <!-- Clave editorial input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="editorialLEd" name="cveEditorial" class="form-control" />
+                <label class="form-label" for="form1Example2">Clave de editorial</label>
+            </div>
+
+            <!-- Clave autor input -->
+            <div class="form-outline mb-4">
+                <input type="text" id="autorLEd" name="cveAutor" class="form-control" />
+                <label class="form-label" for="form1Example2">Clave de autor</label>
+            </div>
+        </div>  
+        <div class="modal-footer">
+            <button type="button" class="btn btn-outline-danger" data-mdb-dismiss="modal">
+            Cancelar
+            </button>
+            <button type="submit" name="addlibro" id="btn-Editar" class="btn btn-outline-success">Editar</button>
+        </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    </div>
 
     <!--Modal eliminar-->
 
@@ -119,39 +172,7 @@ include('src/header.php');
     </div>
 
     <!-- Formulario no modal -->
-    <div class="mx-auto mt-2 mb-5">
-    <form method="POST" id="formularioEditar" name="formEditar" class="w-25 mx-auto mb-3">
-            <!-- Id de libro input -->
-            <div class="form-outline mb-3">
-                <input type="text" id="IdLEd" name="IdLibro" class="form-control" readonly="readonly"/>
-                <label class="form-label" for="form1Example1">Id de libro</label>
-            </div>
-            <!-- Titulo de libro input -->
-            <div class="form-outline mb-3">
-                <input type="text" id="tituloLEd" name="tituloL" class="form-control" />
-                <label class="form-label" for="form1Example1">Titulo de libro</label>
-            </div>
-
-            <!-- Clave editorial input -->
-            <div class="form-outline mb-3">
-                <input type="text" id="editorialLEd" name="cveEditorial" class="form-control" />
-                <label class="form-label" for="form1Example2">Clave de editorial</label>
-            </div>
-
-            <!-- Clave autor input -->
-            <div class="form-outline mb-3">
-                <input type="text" id="autorLEd" name="cveAutor" class="form-control" />
-                <label class="form-label" for="form1Example2">Clave de autor</label>
-            </div> 
-            <div class="row mx-auto">
-        <div class="form-outline mb-3 mx-auto">
-            <button type="button" class="btn btn-outline-danger mb-5 mt-1" data-mdb-dismiss="modal">
-            Eliminar</button>
-            <button type="submit" name="addlibro" id="btn-Editar" class="btn btn-outline-success mb-5 mt-1">Editar</button>
-        </div>
-        </div>
-        </form>
-    </div>
+    
 </div>
 <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script

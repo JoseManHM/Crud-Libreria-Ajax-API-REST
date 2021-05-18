@@ -55,19 +55,20 @@
         });
     }
     var actualizar = function(){
-        $("form").on("submit", function(e){
+        $("#btn-Editar").on("click", function(e){
             e.preventDefault();
-            var frm = $(this).serialize();
+            var frm = $("#formularioEditar").serialize();
+            console.log(frm);
             $.ajax({
                 method: "POST",
                 url: "actualizarLibro.php",
-                data: frm
-            }).done(function(){
-                $("#EditarModal").modal('hide');
-                //$("#IdLEd").trigger("reset");
-                //$("formularioEditar").validate().resetForm();
-                limpiar();
-                mostrarL();
+                data: frm,
+                success:function(r){
+                    $("#EditarModal").modal('hide');
+                    
+                    mostrarL();
+                    //$("#EliminarModal").modal('hide');
+                }
             });
         });
     }
