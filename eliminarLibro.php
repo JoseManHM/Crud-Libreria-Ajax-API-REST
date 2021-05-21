@@ -1,12 +1,12 @@
 <?php
-
     include('connection.php');
-    $idLibro = $_POST["IdLibro"];
-
-    $sql = "DELETE FROM libro WHERE CVE_LIBRO = '$idLibro'";
-    $resultado = mysqli_query($conn, $sql);
-
-    mysqli_free_result($resultado);
-    mysqli_close($conn);
-
+    header('Access-Control-Allow-Origin: *');
+    if($_SERVER['REQUEST_METHOD'] === 'DELETE'){
+        $data = file_get_contents("php://input");//Se extrae el Id que viene del ajax y se guarda en una variable
+        $sql = "DELETE FROM libro WHERE CVE_LIBRO = '$data'";
+        $resultado = mysqli_query($conn, $sql);
+        mysqli_close($conn);
+    } else{
+        header("HTTP/1.1 400 Bad Request");
+    }
 ?>

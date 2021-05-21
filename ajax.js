@@ -1,7 +1,7 @@
 'use strict'
 
   $(document).ready( function(){
-      mostrarL();
+      mostrarL(); //Lena tabla
       actualizar();
       eliminarLibro();
       insertarLibro();
@@ -15,7 +15,7 @@
             },
             "destroy":true,
             "ajax":{
-                "type":"POST",
+                "type":"GET",
                 "datatype": "JSON",
                 "url": "mostrarLibros.php"
             },
@@ -33,7 +33,7 @@
         getLibros("#libraryTable tbody", table);
         getIdEliminar("#libraryTable tbody", table);  
     }
-    var getLibros = function(tbody, table){
+    var getLibros = function(tbody, table){//Extrae datos de libros y los pone en formulario modal
         $(tbody).on("click", "button.editar", function(){
             var data = table.row( $(this).parents("tr") ).data(); 
             var idLibro = $("#IdLEd").val(data.CLAVE_LIBRO ),
@@ -42,13 +42,13 @@
                 autorLibro = $("#autorLEd").val(data.CLAVE_AUTOR );   
         });
     }
-    var limpiar = function(){
+    var limpiar = function(){ //Limpia formulario agregar libro
         $('#IdLEd').val("");
         $('#tituloLEd').val("");
         $('#editorialLEd').val("");
         $('#autorLEd').val("");
     }
-    var getIdEliminar = function(tbody, table){
+    var getIdEliminar = function(tbody, table){//Extrae id libro para eliminar
         $(tbody).on("click", "button.eliminar", function(){
             var data = table.row($(this).parents("tr")).data();
             var idLibro = $("#IdLibroEliminar").val(data.CLAVE_LIBRO);
@@ -56,18 +56,18 @@
     }
     var actualizar = function(){
         $("#btn-Editar").on("click", function(e){
-            e.preventDefault();
-            var frm = $("#formularioEditar").serialize();
+            e.preventDefault();//Evita que modal recargue pagina
+            var frmArr = $("#formularioEditar").serializeArray();//Extrae datos fomrulario
+            var frm = JSON.stringify(frmArr);//Convierte datos a JSON
             console.log(frm);
             $.ajax({
-                method: "POST",
+                method: "PUT",
+                contentType: "application/json; charset=utf-8",
                 url: "actualizarLibro.php",
-                data: frm,
-                success:function(r){
-                    $("#EditarModal").modal('hide');
-                    
+                data: (frm),
+                success:function(){
+                    $("#EditarModal").modal('hide');//Cierra modal
                     mostrarL();
-                    //$("#EliminarModal").modal('hide');
                 }
             });
         });
@@ -76,9 +76,10 @@
         $("#btnEliminarLibro").on("click", function(){
             var idLibro = $("#IdLibroEliminar").val();
             $.ajax({
-                type: "POST",
+                type: "DELETE",
+                contentType: "application/json; charset=utf-8",
                 url: "eliminarLibro.php",
-                data: {"IdLibro": idLibro},
+                data: idLibro,
                 success:function(r){
                     console.log(idLibro);
                     //$("#IdLibro").trigger("reset");
