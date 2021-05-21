@@ -1,7 +1,8 @@
 <?php
     include('connection.php');
     header("Access-Control-Allow-Origin: *");
-    header("Access-Control-Allow-Methods: PUT");
+    header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+    header('Access-Control-Allow-Methods: PUT');
     if($_SERVER['REQUEST_METHOD'] === 'PUT'){
     $data = (file_get_contents("php://input"));//Traemos los datos en texto
     $dataJ = json_decode($data,true);//Convertimos los datos a JSON
